@@ -1,6 +1,6 @@
 package jqz.fps.Forms;
 
-import jqz.fps.FileManager;
+import jqz.fps.Utilities.FileManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

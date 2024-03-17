@@ -1,5 +1,9 @@
 package jqz.fps.Forms;
 
+import jqz.fps.DAO.DAOConfig;
+import jqz.fps.Utilities.Language;
+import jqz.fps.Main;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,6 +19,8 @@ public class MainMenu extends JFrame {
     private JButton jbClose;
     private JLabel jlGithub;
     private JButton jbChangelog;
+    private JComboBox jcbDarkMode;
+    private JComboBox jcbLanguage;
 
     public MainMenu() {
         start_form();
@@ -64,15 +70,50 @@ public class MainMenu extends JFrame {
                 changelog.setVisible(true);
             }
         });
+        jcbLanguage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(jcbLanguage.getSelectedIndex() == 0) return;
+                DAOConfig.update_language((byte) (jcbLanguage.getSelectedIndex() - 1));
+                dispose();
+                Language.language = Language.get_language();
+                Main.main(null);
+            }
+        });
+        jcbDarkMode.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(jcbDarkMode.getSelectedIndex() == 0) return;
+                DAOConfig.update_dark_mode((byte) (jcbDarkMode.getSelectedIndex() - 1));
+                dispose();
+                Main.main(null);
+            }
+        });
     }
 
     private void start_form(){
-        setTitle("Main Menu");
+        setTitle(Language.language.get(1));
         setResizable(false);
         setContentPane(jpPrincipal);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setSize(302, 276);
+        setSize(323, 349);
         setLocationRelativeTo(null);
+
+        // Translations
+        jcbDarkMode.removeAllItems();
+        jcbDarkMode.addItem(Language.language.get(34));
+        jcbDarkMode.addItem(Language.language.get(35));
+        jcbDarkMode.addItem(Language.language.get(36));
+        jcbLanguage.removeAllItems();
+        jcbLanguage.addItem(Language.language.get(37));
+        jcbLanguage.addItem("English");
+        jcbLanguage.addItem("Español");
+        jcbLanguage.addItem("Français");
+        jcbLanguage.addItem("Portugués");
+        jbStart.setText(Language.language.get(3));
+        jbClose.setText(Language.language.get(4));
+        jlGithub.setText(Language.language.get(2));
+
     }
 
 }

@@ -11,13 +11,14 @@ public abstract class Database {
 
     /**
      * This method makes the connection of the database
+     * @param route is the route of the database
      * @return the connection
      */
 
-    public static java.sql.Connection connect(){
+    public static java.sql.Connection connect(String route){
         try {
             return DriverManager.getConnection
-                    ("jdbc:sqlite:" + System.getProperty("user.dir") + "\\database\\pokemon.db");
+                    ("jdbc:sqlite:" + System.getProperty("user.dir") + "\\" + route);
             // This is the directory of the database
         } catch (SQLException e){
             throw new RuntimeException(e);

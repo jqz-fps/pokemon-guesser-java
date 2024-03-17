@@ -1,10 +1,11 @@
 package jqz.fps.Forms;
 
-import jqz.fps.Convert;
+import jqz.fps.Utilities.Convert;
 import jqz.fps.DAO.DAOPokemon;
 import jqz.fps.DTO.Pokemon;
-import jqz.fps.Images;
-import jqz.fps.StringManager;
+import jqz.fps.Utilities.Images;
+import jqz.fps.Utilities.Language;
+import jqz.fps.Utilities.StringManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,6 +43,18 @@ public class GameScreen extends JFrame {
     private JPanel jpStats;
     private JPanel jpNameCRate;
     private JPanel jpTypes;
+    private JLabel jltGeneration;
+    private JLabel jltStarter;
+    private JLabel jltBaby;
+    private JLabel jltLegendary;
+    private JLabel jltMythical;
+    private JLabel jltTypes;
+    private JLabel jltPokemonJPName;
+    private JLabel jltDescription;
+    private JLabel jltAbilities;
+    private JLabel jltMakeGuess;
+    private JLabel jltAttemptsRemaining;
+    private JPanel jpImage;
 
     Random random = new Random();
 
@@ -113,18 +126,18 @@ public class GameScreen extends JFrame {
             for (Pokemon poke : pokemons) pokemonNames.add(poke.getName());
 
             JOptionPane.showMessageDialog(jpPrincipal,
-                    "The pokemon wasn't found\nMaybe you mean \"" + StringManager.search_similar_word(jtfPokemonGuess.getText(), pokemonNames) + "\"" ,
-                    "Not found", JOptionPane.WARNING_MESSAGE);
+                    Language.language.get(18) + " \"" + StringManager.search_similar_word(jtfPokemonGuess.getText(), pokemonNames) + "\"" ,
+                    Language.language.get(19), JOptionPane.WARNING_MESSAGE);
         } else {
             if (!jtfPokemonGuess.getText().equalsIgnoreCase(pokemon.getName())) {
                 attempts -= 1;
                 jlAttempts.setText(String.valueOf(attempts));
-                JOptionPane.showMessageDialog(jpPrincipal, "The pokemon wanted is not that one", "Fail", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(jpPrincipal, Language.language.get(20), Language.language.get(21), JOptionPane.ERROR_MESSAGE);
                 verify_attempts();
             } else {
                 timer.cancel();
                 set_all_data();
-                JOptionPane.showMessageDialog(jpPrincipal, "Congratulations, you won the game!\nScore: " + calculate_points(), "Winner", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(jpPrincipal, Language.language.get(22) + " " + calculate_points(), Language.language.get(23), JOptionPane.WARNING_MESSAGE);
             }
         }
         jtfPokemonGuess.setText("");
@@ -140,7 +153,7 @@ public class GameScreen extends JFrame {
     private void verify_attempts(){
         if(attempts == 0){
             timer.cancel();
-            JOptionPane.showMessageDialog(jpPrincipal, "Don't have more attempts,\nyou lost the game", "Sorry", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(jpPrincipal, Language.language.get(24), Language.language.get(25), JOptionPane.ERROR_MESSAGE);
             set_all_data();
         } else show_clue();
     }
@@ -149,6 +162,7 @@ public class GameScreen extends JFrame {
         // Start the counter
         timer.schedule(timerTask, 0, 1000);
         // Prepare TextPane and Pane Size
+        jpImage.setPreferredSize(new Dimension(200, 200));
         jpStats.setPreferredSize(new Dimension(168, 108));
         jpTypes.setPreferredSize(new Dimension(85, 108));
         jpNameCRate.setPreferredSize(new Dimension(108, 108));
@@ -240,7 +254,7 @@ public class GameScreen extends JFrame {
 
     private void set_pokemon_capture_rate(){
         // Clue 6
-        jlCaptureRate.setText("Capture Rate: " + pokemon.getCaptureRate());
+        jlCaptureRate.setText(Language.language.get(11) + " " + pokemon.getCaptureRate());
         cluesShown[5] = true;
     }
 
@@ -303,7 +317,7 @@ public class GameScreen extends JFrame {
         // Japanese Name
         jlPokemonJPName.setText("???");
         // Capture Rate
-        jlCaptureRate.setText("Capture Rate: ???");
+        jlCaptureRate.setText(Language.language.get(11) + " ???");
         // Stats
         jlPs.setText("PS: ???");
         jlAta.setText("ATA: ???");
@@ -351,12 +365,27 @@ public class GameScreen extends JFrame {
                 timer.cancel();
             }
         });
-        setTitle("Game");
+        setTitle(Language.language.get(31));
         setResizable(false);
         setContentPane(jpPrincipal);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setSize(800, 490);
         setLocationRelativeTo(null);
+
+        jltGeneration.setText(Language.language.get(5));
+        jltStarter.setText(Language.language.get(6));
+        jltBaby.setText(Language.language.get(7));
+        jltLegendary.setText(Language.language.get(8));
+        jltMythical.setText(Language.language.get(9));
+        jltPokemonJPName.setText(Language.language.get(10));
+        jlCaptureRate.setText(Language.language.get(11) + " ???");
+        jltTypes.setText(Language.language.get(12));
+        jltAbilities.setText(Language.language.get(13));
+        jltDescription.setText(Language.language.get(14));
+        jltAttemptsRemaining.setText(Language.language.get(15));
+        jltMakeGuess.setText(Language.language.get(16));
+        jbReturn.setText(Language.language.get(17));
+        jbSelect.setText(Language.language.get(30));
     }
 
 }

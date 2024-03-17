@@ -18,7 +18,7 @@ public class DAOPokemon extends Database {
 
     public static Pokemon select(int id){
 
-        Connection connection = connect();
+        Connection connection = connect("data\\pokemon.db");
         PreparedStatement command = null;
         ResultSet resultSet = null;
         // The command and resultSet needs to start as null for close the active connections
@@ -88,7 +88,7 @@ public class DAOPokemon extends Database {
 
     public static ArrayList<Pokemon> select_all(){
 
-        Connection connection = connect();
+        Connection connection = connect("data\\pokemon.db");
         PreparedStatement command = null;
         ResultSet resultSet = null;
 

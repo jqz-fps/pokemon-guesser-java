@@ -58,7 +58,7 @@ public class GameScreen extends JFrame {
 
     Random random = new Random();
 
-    ArrayList<Pokemon> pokemons = DAOPokemon.select_all();
+    ArrayList<Pokemon> pokemons = MainMenu.pokemons;
 
     Pokemon pokemon;
 

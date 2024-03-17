@@ -1,6 +1,8 @@
 package jqz.fps.Forms;
 
 import jqz.fps.DAO.DAOConfig;
+import jqz.fps.DAO.DAOPokemon;
+import jqz.fps.DTO.Pokemon;
 import jqz.fps.Utilities.Language;
 import jqz.fps.Main;
 
@@ -12,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 public class MainMenu extends JFrame {
     private JPanel jpPrincipal;
@@ -22,8 +25,12 @@ public class MainMenu extends JFrame {
     private JComboBox jcbDarkMode;
     private JComboBox jcbLanguage;
 
+    // Here we load the pokemons
+    public static ArrayList<Pokemon> pokemons = new ArrayList<>();
+
     public MainMenu() {
         start_form();
+        pokemons = DAOPokemon.select_all();
         jbClose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

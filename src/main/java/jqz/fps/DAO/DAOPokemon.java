@@ -1,6 +1,7 @@
 package jqz.fps.DAO;
 
 import jqz.fps.DTO.Pokemon;
+import jqz.fps.Utilities.Language;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,6 +18,26 @@ public class DAOPokemon extends Database {
      */
 
     public static Pokemon select(int id){
+
+        byte language = DAOConfig.load_language();
+        byte abLang = 10;
+        byte nameLang = 7;
+        byte descLang = 16;
+        switch (language){
+            case 0: // English
+                break;
+            case 1: // Spanish
+                abLang = 11;
+                descLang = 17;
+                break;
+            case 2: // French
+                abLang = 12;
+                nameLang = 9;
+                descLang = 18;
+                break;
+            case 3: // Portuguesse
+                break;
+        }
 
         Connection connection = connect("data\\pokemon.db");
         PreparedStatement command = null;
@@ -37,15 +58,15 @@ public class DAOPokemon extends Database {
 
                 // // Here i manage the abilities
                 ArrayList<String> abilityes = new ArrayList<>();
-                String[] absObtained = resultSet.getString(9).split(",");
+                String[] absObtained = resultSet.getString(abLang).split(",");
                 for(String ab : absObtained) abilityes.add(ab);
                 // // Here the types
                 ArrayList<String> types = new ArrayList<>();
-                String[] typesObtained = resultSet.getString(10).split(",");
-                for(String type : typesObtained) types.add(type); // so ez dude.
+                String[] typesObtained = resultSet.getString(13).split(",");
+                for(String type : typesObtained) types.add(type); // it's not too ez dude. :(
                 // // And here the stats
                 int[] stats = new int[6];
-                String[] statsObtained = resultSet.getString(11).split(",");
+                String[] statsObtained = resultSet.getString(14).split(",");
                 for (int i = 0; i < statsObtained.length; i++)
                     stats[i] = Integer.parseInt(statsObtained[i]);
 
@@ -58,18 +79,16 @@ public class DAOPokemon extends Database {
                         Boolean.parseBoolean(resultSet.getString(4)),
                         Boolean.parseBoolean(resultSet.getString(5)),
                         Boolean.parseBoolean(resultSet.getString(6)),
-                        resultSet.getString(7),
+                        resultSet.getString(nameLang),
                         resultSet.getString(8),
                         abilityes, types, stats,
-                        resultSet.getInt(12),
-                        resultSet.getString(13)
+                        resultSet.getInt(15),
+                        resultSet.getString(descLang)
                 );
 
                 return pokemonObtained;
                 // I can do this in a line? Yes, but i want to be more explanatory
-
             }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -87,6 +106,26 @@ public class DAOPokemon extends Database {
      */
 
     public static ArrayList<Pokemon> select_all(){
+
+        byte language = DAOConfig.load_language();
+        byte abLang = 10;
+        byte nameLang = 7;
+        byte descLang = 16;
+        switch (language){
+            case 0: // English
+                break;
+            case 1: // Spanish
+                abLang = 11;
+                descLang = 17;
+                break;
+            case 2: // French
+                abLang = 12;
+                nameLang = 9;
+                descLang = 18;
+                break;
+            case 3: // Portuguesse
+                break;
+        }
 
         Connection connection = connect("data\\pokemon.db");
         PreparedStatement command = null;
@@ -106,13 +145,13 @@ public class DAOPokemon extends Database {
                 // here only we need to add the poke to the arraylist
 
                 ArrayList<String> abilityes = new ArrayList<>();
-                String[] absObtained = resultSet.getString(9).split(",");
+                String[] absObtained = resultSet.getString(abLang).split(",");
                 for(String ab : absObtained) abilityes.add(ab);
                 ArrayList<String> types = new ArrayList<>();
-                String[] typesObtained = resultSet.getString(10).split(",");
+                String[] typesObtained = resultSet.getString(13).split(",");
                 for(String type : typesObtained) types.add(type);
                 int[] stats = new int[6];
-                String[] statsObtained = resultSet.getString(11).split(",");
+                String[] statsObtained = resultSet.getString(14).split(",");
                 for (int i = 0; i < statsObtained.length; i++)
                     stats[i] = Integer.parseInt(statsObtained[i]);
 
@@ -123,11 +162,11 @@ public class DAOPokemon extends Database {
                         Boolean.parseBoolean(resultSet.getString(4)),
                         Boolean.parseBoolean(resultSet.getString(5)),
                         Boolean.parseBoolean(resultSet.getString(6)),
-                        resultSet.getString(7),
+                        resultSet.getString(nameLang),
                         resultSet.getString(8),
                         abilityes, types, stats,
-                        resultSet.getInt(12),
-                        resultSet.getString(13)
+                        resultSet.getInt(15),
+                        resultSet.getString(descLang)
                 );
 
                 pokemons.add(pokemonObtained);

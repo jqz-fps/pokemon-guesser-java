@@ -83,7 +83,7 @@ public class DAOPokemon extends Database {
                         resultSet.getString(8),
                         abilityes, types, stats,
                         resultSet.getInt(15),
-                        resultSet.getString(descLang)
+                        resultSet.getString(descLang).equals("null") ? resultSet.getString(16) : resultSet.getString(descLang)
                 );
 
                 return pokemonObtained;
@@ -166,7 +166,7 @@ public class DAOPokemon extends Database {
                         resultSet.getString(8),
                         abilityes, types, stats,
                         resultSet.getInt(15),
-                        resultSet.getString(descLang)
+                        resultSet.getString(descLang).equals("null") ? resultSet.getString(16) : resultSet.getString(descLang)
                 );
 
                 pokemons.add(pokemonObtained);

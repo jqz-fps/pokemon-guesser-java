@@ -3,6 +3,7 @@ package jqz.fps.Forms;
 import jqz.fps.DAO.DAOConfig;
 import jqz.fps.DAO.DAOPokemon;
 import jqz.fps.DTO.Pokemon;
+import jqz.fps.Utilities.Images;
 import jqz.fps.Utilities.Language;
 import jqz.fps.Main;
 
@@ -24,6 +25,7 @@ public class MainMenu extends JFrame {
     private JButton jbChangelog;
     private JComboBox jcbDarkMode;
     private JComboBox jcbLanguage;
+    private JButton jbCredits;
 
     // Here we load the pokemons
     public static ArrayList<Pokemon> pokemons = new ArrayList<>();
@@ -51,24 +53,27 @@ public class MainMenu extends JFrame {
                 super.mouseClicked(e);
                 // so in this listener we make a connection to the desktop
                 // and search the github page from the java app
-                if(java.awt.Desktop.isDesktopSupported()){
-                    java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+                if(e.getButton() == MouseEvent.BUTTON1) {
+                    if (java.awt.Desktop.isDesktopSupported()) {
+                        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
 
-                    if(desktop.isSupported(Desktop.Action.BROWSE)){
-                        try {
-                            java.net.URI uri = new java.net.URI("https://github.com/jqz-fps/pokemon-guesser-java");
+                        if (desktop.isSupported(Desktop.Action.BROWSE)) {
                             try {
-                                desktop.browse(uri);
-                            } catch (IOException ex) {
+                                java.net.URI uri = new java.net.URI("https://github.com/jqz-fps/pokemon-guesser-java");
+                                try {
+                                    desktop.browse(uri);
+                                } catch (IOException ex) {
+                                    throw new RuntimeException(ex);
+                                }
+                            } catch (URISyntaxException ex) {
                                 throw new RuntimeException(ex);
                             }
-                        } catch (URISyntaxException ex) {
-                            throw new RuntimeException(ex);
                         }
-                    }
 
+                    }
                 }
             }
+
         });
         jbChangelog.addActionListener(new ActionListener() {
             @Override
@@ -96,6 +101,13 @@ public class MainMenu extends JFrame {
                 Main.main(null);
             }
         });
+        jbCredits.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Credits credits = new Credits();
+                credits.setVisible(true);
+            }
+        });
     }
 
     private void start_form(){
@@ -105,6 +117,7 @@ public class MainMenu extends JFrame {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setSize(323, 349);
         setLocationRelativeTo(null);
+        setIconImage(Images.get_asset_icon("pokeball").getImage());
 
         // Translations
         jcbDarkMode.removeAllItems();
@@ -120,6 +133,7 @@ public class MainMenu extends JFrame {
         jbStart.setText(Language.language.get(3));
         jbClose.setText(Language.language.get(4));
         jlGithub.setText(Language.language.get(2));
+        jbCredits.setText(Language.language.get(39));
 
     }
 

@@ -1,6 +1,7 @@
 package jqz.fps.Forms;
 
 import jqz.fps.Utilities.FileManager;
+import jqz.fps.Utilities.Images;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +17,7 @@ public class Changelog extends JDialog {
     public Changelog(){
         start_form();
         jtpChangelog.setContentType("text/html"); // this pane will have a html file 💀
-        jtpChangelog.setText(FileManager.read_txt_file("changelog.html"));
+        jtpChangelog.setText(FileManager.read_txt_file("assets\\changelog.html"));
         jtpChangelog.setCaretPosition(0);
         jcbClose.addActionListener(new ActionListener() {
             @Override
@@ -34,6 +35,7 @@ public class Changelog extends JDialog {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setSize(420, 433);
         setLocationRelativeTo(null);
+        setIconImage(Images.get_asset_icon("pokeball").getImage());
     }
 
 }

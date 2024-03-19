@@ -1,11 +1,8 @@
 package jqz.fps.Forms;
 
-import jqz.fps.Utilities.Convert;
-import jqz.fps.DAO.DAOPokemon;
+import jqz.fps.Main;
+import jqz.fps.Utilities.*;
 import jqz.fps.DTO.Pokemon;
-import jqz.fps.Utilities.Images;
-import jqz.fps.Utilities.Language;
-import jqz.fps.Utilities.StringManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,12 +52,13 @@ public class GameScreen extends JFrame {
     private JLabel jltMakeGuess;
     private JLabel jltAttemptsRemaining;
     private JPanel jpImage;
+    private JButton jbPlayAgain;
 
     Random random = new Random();
 
     ArrayList<Pokemon> pokemons = MainMenu.pokemons;
 
-    Pokemon pokemon;
+    Pokemon pokemon; // This is the pokemon searched
 
     boolean[] cluesShown = new boolean[]{
             false, false,
@@ -98,7 +96,7 @@ public class GameScreen extends JFrame {
         jbSelect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                make_guess();
+                make_guess(jtfPokemonGuess.getText().trim());
             }
         });
         jbReturn.addActionListener(new ActionListener() {
@@ -109,53 +107,14 @@ public class GameScreen extends JFrame {
                 dispose();
             }
         });
-    }
-
-    private void make_guess(){
-        // Verify that the pokemon is in the database to make the guess
-        boolean found = false;
-        for (Pokemon poke : pokemons) {
-            if (poke.getName().equalsIgnoreCase(jtfPokemonGuess.getText())) {
-                found = true;
-                break;
+        jbPlayAgain.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                GameScreen newGame = new GameScreen();
+                newGame.setVisible(true);
             }
-        }
-        if (!found) {
-            // If it is not found, the player is notified. And a pokemon with a similar name is shown
-            ArrayList<String> pokemonNames = new ArrayList<>();
-            for (Pokemon poke : pokemons) pokemonNames.add(poke.getName());
-
-            JOptionPane.showMessageDialog(jpPrincipal,
-                    Language.language.get(18) + " \"" + StringManager.search_similar_word(jtfPokemonGuess.getText(), pokemonNames) + "\"" ,
-                    Language.language.get(19), JOptionPane.WARNING_MESSAGE);
-        } else {
-            if (!jtfPokemonGuess.getText().equalsIgnoreCase(pokemon.getName())) {
-                attempts -= 1;
-                jlAttempts.setText(String.valueOf(attempts));
-                JOptionPane.showMessageDialog(jpPrincipal, Language.language.get(20), Language.language.get(21), JOptionPane.ERROR_MESSAGE);
-                verify_attempts();
-            } else {
-                timer.cancel();
-                set_all_data();
-                JOptionPane.showMessageDialog(jpPrincipal, Language.language.get(22) + " " + calculate_points(), Language.language.get(23), JOptionPane.WARNING_MESSAGE);
-            }
-        }
-        jtfPokemonGuess.setText("");
-    }
-
-    private int calculate_points(){
-        int startPoints = 20000;
-        int pointsByAttempts = startPoints / 9;
-        int finalScore = (int) (startPoints - (pointsByAttempts * (9 - attempts)) - (secondsGame * 5));
-        return finalScore > -1 ? finalScore : 0; // if the final score is less than 0 this returns 0
-    }
-
-    private void verify_attempts(){
-        if(attempts == 0){
-            timer.cancel();
-            JOptionPane.showMessageDialog(jpPrincipal, Language.language.get(24), Language.language.get(25), JOptionPane.ERROR_MESSAGE);
-            set_all_data();
-        } else show_clue();
+        });
     }
 
     private void start_game(){
@@ -178,6 +137,53 @@ public class GameScreen extends JFrame {
         this.attempts = 9;
         jlAttempts.setText(String.valueOf(attempts));
         show_clue();
+    }
+
+    private void make_guess(String guess){
+        // Verify that the pokemon is in the database to make the guess
+        boolean found = false;
+        for (Pokemon poke : pokemons) {
+            if (poke.getName().equalsIgnoreCase(guess)) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            // If it is not found, the player is notified. And a pokemon with a similar name is shown
+            ArrayList<String> pokemonNames = new ArrayList<>();
+            for (Pokemon poke : pokemons) pokemonNames.add(poke.getName());
+
+            JOptionPane.showMessageDialog(jpPrincipal,
+                    Language.language.get(18) + " \"" + StringManager.search_similar_word(guess, pokemonNames) + "\"" ,
+                    Language.language.get(19), JOptionPane.WARNING_MESSAGE);
+        } else {
+            if (!guess.equalsIgnoreCase(pokemon.getName())) {
+                attempts -= 1;
+                jlAttempts.setText(String.valueOf(attempts));
+                JOptionPane.showMessageDialog(jpPrincipal, Language.language.get(20), Language.language.get(21), JOptionPane.ERROR_MESSAGE);
+                verify_attempts();
+            } else {
+                timer.cancel();
+                set_all_data();
+                JOptionPane.showMessageDialog(jpPrincipal, Language.language.get(22) + " " + calculate_points(), Language.language.get(23), JOptionPane.WARNING_MESSAGE);
+            }
+        }
+        jtfPokemonGuess.setText("");
+    }
+
+    private void verify_attempts(){
+        if(attempts == 0){
+            timer.cancel();
+            JOptionPane.showMessageDialog(jpPrincipal, Language.language.get(24), Language.language.get(25), JOptionPane.ERROR_MESSAGE);
+            set_all_data();
+        } else show_clue();
+    }
+
+    private int calculate_points(){
+        int startPoints = 20000;
+        int pointsByAttempts = startPoints / 9;
+        int finalScore = (int) (startPoints - (pointsByAttempts * (9 - attempts)) - (secondsGame * 5));
+        return finalScore > -1 ? finalScore : 0; // if the final score is less than 0 this returns 0
     }
 
     private void show_clue(){
@@ -349,28 +355,17 @@ public class GameScreen extends JFrame {
         set_pokemon_abilities();
         set_pokemon_description();
         jbSelect.setEnabled(false);
+        jbPlayAgain.setVisible(true);
     }
 
     private void start_form(){
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                super.windowClosing(e);
-                timer.cancel();
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-                super.windowClosed(e);
-                timer.cancel();
-            }
-        });
         setTitle(Language.language.get(31));
         setResizable(false);
         setContentPane(jpPrincipal);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setSize(800, 490);
         setLocationRelativeTo(null);
+        setIconImage(Images.get_asset_icon("pokeball").getImage());
 
         jltGeneration.setText(Language.language.get(5));
         jltStarter.setText(Language.language.get(6));
@@ -386,6 +381,21 @@ public class GameScreen extends JFrame {
         jltMakeGuess.setText(Language.language.get(16));
         jbReturn.setText(Language.language.get(17));
         jbSelect.setText(Language.language.get(30));
+        jbPlayAgain.setText(Language.language.get(38));
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                timer.cancel();
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                super.windowClosed(e);
+                timer.cancel();
+            }
+        });
     }
 
 }

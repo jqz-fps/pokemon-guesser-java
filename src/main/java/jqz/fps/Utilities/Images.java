@@ -1,5 +1,7 @@
 package jqz.fps.Utilities;
 
+import jqz.fps.Main;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -37,6 +39,17 @@ public class Images {
 
     public static ImageIcon get_check_icon(String check){
         return new ImageIcon("assets\\check\\" + Convert.capitalize_first_letter(check) + ".png");
+    }
+
+    /**
+     * This method will return a icon IN LOWER CASE
+     * from the icons folder
+     * @param iconName the name
+     * @return the icon with LOWER CASE name from the icons folder
+     */
+
+    public static ImageIcon get_asset_icon(String iconName){
+        return new ImageIcon("assets\\icons\\" + iconName.toLowerCase() + ".png");
     }
 
     /**
